@@ -7,8 +7,7 @@ const crypto = require('crypto');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const webhookSecret = process.env.WEBHOOK_SECRET;
-
-
+const processWebhook = require('./utils/processWebhook')
 
 const hasValidSignature = (body, signature) => {
   const computedSignature = crypto.createHmac('sha256', webhookSecret)
@@ -19,7 +18,6 @@ const hasValidSignature = (body, signature) => {
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var webhookRouter = require('./routes/webhook')
 
 var app = express();
 
@@ -37,12 +35,27 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.post('/webhook', (req, res) => {
-  if(hasValidSignature(req.body, req.headers['x-kc-signature'])) {
-    res.status(200).send('Success');
+  const parsedBody = JSON.parse(req.body);
+  try {
+    console.log(parsedBody.data.items)
+    if(hasValidSignature(req.body, req.headers['x-kc-signature'])) {
+      processWebhook(parsedBody)
+      res.status(200).send('Success');
+    }
+    else{
+      res.status(403).send('invalid sig')
+    }
+  
+  } catch (error) {
+    res.status(error).send()
   }
-  else {
-    res.status(403).send('Invalid signature');
-  }
+  // if(hasValidSignature(data, req.headers['x-kc-signature'])) {
+  //   // processWebhook(req.body)
+  //   res.status(200).send('Success');
+  // }
+  // else {
+  //   res.status(403).send('Invalid signature');
+  // }
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
