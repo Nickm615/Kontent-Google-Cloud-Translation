@@ -36,4 +36,4 @@ async function getTypeId(itemId){
             .listLanguages()
             .toPromise();
   }
-module.exports = {getVariant, getContentItem, getContentType};
+module.exports = {getVariant, getTypeId, getContentType};

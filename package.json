@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@google-cloud/translate": "^7.0.3",
     "@kontent-ai/management-sdk": "^3.4.0",
     "@kontent-ai/webhook-helper": "^2.0.1",
     "cookie-parser": "~1.4.4",
