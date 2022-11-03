@@ -22,7 +22,7 @@ async function translateText(text, target) {
     translations = Array.isArray(translations) ? translations : [translations];
     console.log('Translations:');
     translations.forEach((translation, i) => {
-      console.log(`${text} => (${target}) ${translation}`);
+      console.log(`${text} => (${target}) ${translation}`)
     });
     return translations
 
