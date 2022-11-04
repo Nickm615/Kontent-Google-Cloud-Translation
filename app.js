@@ -37,7 +37,6 @@ app.use('/users', usersRouter);
 app.post('/webhook', (req, res) => {
   const parsedBody = JSON.parse(req.body);
   try {
-    console.log(parsedBody.data.items)
     if(hasValidSignature(req.body, req.headers['x-kc-signature'])) {
       processWebhook(parsedBody)
       res.status(200).send('Success');

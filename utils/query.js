@@ -15,7 +15,7 @@ async function getTypeId(itemId){
         .byItemId(itemId)
         .toPromise();
 
-    console.log(response.data.type.id);
+    // console.log(response.data.type.id);
     return response.data.type.id
   };
 
@@ -26,11 +26,11 @@ async function getTypeId(itemId){
         .byTypeId(typeId)
         .toPromise();
 
-    console.log(response.data);
+    // console.log(response.data);
     return  response.data;
   };
 
-  const getLanguages = (result) => {
+  const getLanguagesforTranslation = (result) => {
     contentType = result.data;
     return client
             .listLanguages()
