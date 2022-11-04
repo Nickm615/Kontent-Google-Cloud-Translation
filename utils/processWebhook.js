@@ -2,7 +2,8 @@ const {getVariant, getTypeId, getContentType} = require('./query');
 const {translateText} = require('./translation');
 const { mergeMap, map } = require('rxjs/operators');
 let updatedVariant, contentItem, contentType;
-
+const createPostModel = require('./model')
+const postModel = createPostModel();
 
 async function processWebhook(body){
     const updatedVariantLangID = body.data.items[0].language.id

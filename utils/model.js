@@ -30,16 +30,16 @@ class Post {
             taxonomyGroup: typeData.elements[4].taxonomy_group.id
 
         };
-        // // this.bodyCopyElement = {
-        // //     id: typeData.elements[5].id,
-        // //     codename: typeData.elements[5].codename,
+        this.bodyCopyElement = {
+            id: typeData.elements[5].id,
+            codename: typeData.elements[5].codename,
 
-        // }
+        }
     
         
     }
 
-    function 
+    
 }
 async function constructType(){
     const contentTypeResponse = await client
@@ -48,9 +48,9 @@ async function constructType(){
     .toPromise();
     console.log(contentTypeResponse.data.elements)
     const postModel = new Post(contentTypeResponse.data)
-    // console.log(postModel)
+    console.log(postModel)
     return postModel;
     
 
 }
-constructType()
+module.exports = constructType;
