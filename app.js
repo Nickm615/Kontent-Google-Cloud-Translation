@@ -42,7 +42,7 @@ app.post('/webhook', (req, res) => {
       res.status(200).send('Success');
     }
     else{
-      res.status(403).send('invalid sig')
+      res.status(403).send('invalid signature')
     }
   
   } catch (error) {

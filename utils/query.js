@@ -1,12 +1,11 @@
 const { response } = require('../app');
 const client = require('./client');
-
+const postModel = require('./model')
 async function getVariant(itemId, langId) {
     const response =  await client.viewLanguageVariant()
     .byItemId(itemId)
     .byLanguageId(langId)
     .toPromise();
-    // console.log(response.data.elements)
     return response.data;
 }
 
@@ -19,7 +18,7 @@ async function getTypeId(itemId){
     return response.data.type.id
   };
 
-  async function getContentType(typeId){
+async function getContentType(typeId){
     contentItem = result.data;
     const response =   await client
         .viewContentType()
@@ -30,10 +29,16 @@ async function getTypeId(itemId){
     return  response.data;
   };
 
-  const getLanguagesforTranslation = (result) => {
-    contentType = result.data;
-    return client
-            .listLanguages()
-            .toPromise();
-  }
-module.exports = {getVariant, getTypeId, getContentType};
+async function upsertVariant(translatedVariant, itemId, targetLang){
+  const response = await client
+    .upsertLanguageVariant()
+    .byItemId(itemId)
+    .byLanguageCodename(targetLang)
+    .withData(translatedVariant)
+    .toPromise()
+
+    console.log('UPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERT',response)
+
+
+}
+module.exports = {getVariant, getTypeId, getContentType, upsertVariant};

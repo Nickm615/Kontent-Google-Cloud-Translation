@@ -46,7 +46,6 @@ async function constructType(){
     .viewContentType()
     .byTypeCodename('post')
     .toPromise();
-    // console.log(contentTypeResponse.data.elements)
     const postModel = new Post(contentTypeResponse.data)
     // console.log(postModel)
     return postModel;

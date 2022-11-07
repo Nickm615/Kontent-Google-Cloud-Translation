@@ -1,36 +1,43 @@
-const {getVariant, getTypeId, getContentType} = require('./query');
+const {getVariant, upsertVariant} = require('./query');
 const translateText = require('./translation');
 let updatedVariant, contentItem, contentType;
 const createPostModel = require('./model')
 const postModel = createPostModel();
+const supportedLanguages = [
+{codename: 'fr', id:'99f062d5-3f7b-4bb1-9215-cea244f704e6'}, 
+{codename: 'es', id:'7a43f993-44f8-4b5b-b21b-90f2ee6b25e6'}, 
+{codename: 'de', id:'bff65a26-2a59-4d99-8151-92284efd5c6f'}
+] 
 
 async function processWebhook(body){
     
     const updatedVariantLangID = body.data.items[0].language.id
     const updatedVariantItemID = body.data.items[0].item.id
     if(updatedVariantLangID !== '00000000-0000-0000-0000-000000000000') return;
-    const untranslatedVariant = await getVariant(updatedVariantItemID, updatedVariantLangID);
-    elementsForTranslation = [untranslatedVariant.elements[0].value, untranslatedVariant.elements[5].value]
-    console.log(elementsForTranslation)
-    translateToAllLanguages(elementsForTranslation)
     //get untrans variant
-    //get type id from the content item
-    //get type with id, save element ids
-    //from untrans variant, get all values for elements that need translation
-    //call for all languages, save an array of language codenames and correlate them to the target that 
-
+    const untranslatedVariant = await getVariant(updatedVariantItemID, updatedVariantLangID);
+    //from untrans variant, get all values for elements that need translation. This is hard coded for the Post type, but could compare element ids using the PostModel to allow for changes to the Post type
+    elementsForTranslation = [untranslatedVariant.elements[0].value, untranslatedVariant.elements[5].value];
+    translateToAllLanguages(elementsForTranslation, untranslatedVariant);
     //BETTER IDEA: Create mapped model of content type with element ids ( assuming it doesn't change) google constructor class
 
 }
 
-async function translateToAllLanguages(elementsForTranslation){
-    const supportedLanguages = ['fr','es','zh'];
-   
+async function translateToAllLanguages(elementsForTranslation, untranslatedVariant, updatedVariantItemID){
+    supportedLanguages.map(async function(targetLang) {
+        const translationOutput = await translateText(elementsForTranslation, targetLang.codename);
+        let translatedVariant = untranslatedVariant;
+        translatedVariant.elements[0].value = translationOutput[0];
+        translatedVariant.elements[5].value = translationOutput[1];
+        translatedVariant.language.id = targetLang.id;
+        console.log(translatedVariant, targetLang);
+        upsertVariant(translatedVariant, updatedVariantItemID, targetLang.codename);
+        return [translatedVariant, targetLang];
 
-   const translationOutput = supportedLanguages.map(async function(targetLang) {
-    console.log( await translateText(elementsForTranslation, targetLang))
+
+
+    
    });
 
 }
-
 module.exports = processWebhook;
