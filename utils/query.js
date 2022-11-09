@@ -6,7 +6,7 @@ async function getVariant(itemId, langId) {
     .byItemId(itemId)
     .byLanguageId(langId)
     .toPromise();
-    return response.data;
+    return response;
 }
 
 async function getTypeId(itemId){
@@ -30,14 +30,20 @@ async function getContentType(typeId){
   };
 
 async function upsertVariant(translatedVariant, itemId, targetLang){
+  console.log(translatedVariant.data)
   const response = await client
     .upsertLanguageVariant()
     .byItemId(itemId)
-    .byLanguageCodename(targetLang)
-    .withData(translatedVariant)
+    .byLanguageCodename(targetLang.codename)
+    .withData((builder)=> {
+      return translatedVariant.data.elements;
+    })
     .toPromise()
+    .catch(err=> console.log(err))
 
-    console.log('UPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERTUPSERT UPSERT UPSERT',response)
+    
+    
+
 
 
 }

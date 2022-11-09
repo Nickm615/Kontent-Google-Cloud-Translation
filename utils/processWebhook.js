@@ -17,8 +17,8 @@ async function processWebhook(body){
     //get untrans variant
     const untranslatedVariant = await getVariant(updatedVariantItemID, updatedVariantLangID);
     //from untrans variant, get all values for elements that need translation. This is hard coded for the Post type, but could compare element ids using the PostModel to allow for changes to the Post type
-    elementsForTranslation = [untranslatedVariant.elements[0].value, untranslatedVariant.elements[5].value];
-    translateToAllLanguages(elementsForTranslation, untranslatedVariant);
+    elementsForTranslation = [untranslatedVariant.data.elements[0].value, untranslatedVariant.data.elements[5].value];
+    translateToAllLanguages(elementsForTranslation, untranslatedVariant, updatedVariantItemID);
     //BETTER IDEA: Create mapped model of content type with element ids ( assuming it doesn't change) google constructor class
 
 }
@@ -27,11 +27,11 @@ async function translateToAllLanguages(elementsForTranslation, untranslatedVaria
     supportedLanguages.map(async function(targetLang) {
         const translationOutput = await translateText(elementsForTranslation, targetLang.codename);
         let translatedVariant = untranslatedVariant;
-        translatedVariant.elements[0].value = translationOutput[0];
-        translatedVariant.elements[5].value = translationOutput[1];
-        translatedVariant.language.id = targetLang.id;
-        console.log(translatedVariant, targetLang);
-        upsertVariant(translatedVariant, updatedVariantItemID, targetLang.codename);
+        translatedVariant.data.elements[0].value = translationOutput[0];
+        translatedVariant.data.elements[5].value = translationOutput[1];
+        translatedVariant.data.language.id = targetLang.id;
+        console.log(targetLang)
+        upsertVariant(translatedVariant, updatedVariantItemID, targetLang);
         return [translatedVariant, targetLang];
 
 
