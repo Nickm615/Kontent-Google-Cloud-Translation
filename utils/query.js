@@ -14,7 +14,6 @@ async function getTypeId(itemId){
         .byItemId(itemId)
         .toPromise();
 
-    // console.log(response.data.type.id);
     return response.data.type.id
   };
 
@@ -25,12 +24,10 @@ async function getContentType(typeId){
         .byTypeId(typeId)
         .toPromise();
 
-    // console.log(response.data);
     return  response.data;
   };
 
 async function upsertVariant(translatedVariant, itemId, targetLang){
-  console.log(translatedVariant.data)
   const response = await client
     .upsertLanguageVariant()
     .byItemId(itemId)
@@ -47,4 +44,20 @@ async function upsertVariant(translatedVariant, itemId, targetLang){
 
 
 }
-module.exports = {getVariant, getTypeId, getContentType, upsertVariant};
+async function updateWorkflow(itemID, languageCodename){
+  const response = await client.changeWorkflowOfLanguageVariant()
+  .byItemId(itemID)
+  .byLanguageCodename(languageCodename)
+  .withData(
+    {
+      "workflow_identifier": {
+      "id": "00000000-0000-0000-0000-000000000000"
+      },
+      "step_identifier": {
+      "codename": "translation_review"
+      }
+      }
+  )
+  .toPromise();
+}
+module.exports = {getVariant, getTypeId, getContentType, upsertVariant, updateWorkflow};

@@ -1,4 +1,4 @@
-const {getVariant, upsertVariant} = require('./query');
+const {getVariant, upsertVariant, updateWorkflow} = require('./query');
 const translateText = require('./translation');
 let updatedVariant, contentItem, contentType;
 const createPostModel = require('./model')
@@ -19,7 +19,6 @@ async function processWebhook(body){
     //from untrans variant, get all values for elements that need translation. This is hard coded for the Post type, but could compare element ids using the PostModel to allow for changes to the Post type
     elementsForTranslation = [untranslatedVariant.data.elements[0].value, untranslatedVariant.data.elements[5].value];
     translateToAllLanguages(elementsForTranslation, untranslatedVariant, updatedVariantItemID);
-    //BETTER IDEA: Create mapped model of content type with element ids ( assuming it doesn't change) google constructor class
 
 }
 
@@ -30,13 +29,9 @@ async function translateToAllLanguages(elementsForTranslation, untranslatedVaria
         translatedVariant.data.elements[0].value = translationOutput[0];
         translatedVariant.data.elements[5].value = translationOutput[1];
         translatedVariant.data.language.id = targetLang.id;
-        console.log(targetLang)
         upsertVariant(translatedVariant, updatedVariantItemID, targetLang);
-        return [translatedVariant, targetLang];
+        updateWorkflow(updatedVariantItemID, targetLang)
 
-
-
-    
    });
 
 }

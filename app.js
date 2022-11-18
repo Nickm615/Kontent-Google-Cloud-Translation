@@ -48,13 +48,6 @@ app.post('/webhook', (req, res) => {
   } catch (error) {
     res.status(error).send()
   }
-  // if(hasValidSignature(data, req.headers['x-kc-signature'])) {
-  //   // processWebhook(req.body)
-  //   res.status(200).send('Success');
-  // }
-  // else {
-  //   res.status(403).send('Invalid signature');
-  // }
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
