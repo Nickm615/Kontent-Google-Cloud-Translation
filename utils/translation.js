@@ -9,7 +9,7 @@ const {Translate} = require('@google-cloud/translate').v2;
 const translate = new Translate(
     {
             projectId: 'smooth-ripple-366714', //eg my-project-0o0o0o0o',
-            key: process.env.GOOGLE_APPLICATION_CREDENTIALS
+            // key: process.env.GOOGLE_APPLICATION_CREDENTIALS
             
     }
 );

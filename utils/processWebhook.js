@@ -24,13 +24,14 @@ async function processWebhook(body){
 
 async function translateToAllLanguages(elementsForTranslation, untranslatedVariant, updatedVariantItemID){
     supportedLanguages.map(async function(targetLang) {
-        const translationOutput = await translateText(elementsForTranslation, targetLang.codename);
         let translatedVariant = untranslatedVariant;
+        const translationOutput = await translateText(elementsForTranslation, targetLang.codename);
         translatedVariant.data.elements[0].value = translationOutput[0];
         translatedVariant.data.elements[5].value = translationOutput[1];
         translatedVariant.data.language.id = targetLang.id;
-        upsertVariant(translatedVariant, updatedVariantItemID, targetLang);
-        updateWorkflow(updatedVariantItemID, targetLang)
+        upsertVariant(translatedVariant, updatedVariantItemID, targetLang).then(async () => {await updateWorkflow(updatedVariantItemID, targetLang.codename)});
+
+
 
    });
 

@@ -1,6 +1,7 @@
 const { response } = require('../app');
 const client = require('./client');
-const postModel = require('./model')
+const postModel = require('./model');
+
 async function getVariant(itemId, langId) {
     const response =  await client.viewLanguageVariant()
     .byItemId(itemId)
@@ -37,6 +38,8 @@ async function upsertVariant(translatedVariant, itemId, targetLang){
     })
     .toPromise()
     .catch(err=> console.log(err))
+
+    return response
 
     
     
