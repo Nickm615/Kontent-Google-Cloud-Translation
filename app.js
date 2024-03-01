@@ -37,25 +37,17 @@ app.use('/users', usersRouter);
 app.post('/webhook', (req, res) => {
   const parsedBody = JSON.parse(req.body);
   try {
-    console.log(parsedBody.data.items)
     if(hasValidSignature(req.body, req.headers['x-kc-signature'])) {
       processWebhook(parsedBody)
       res.status(200).send('Success');
     }
     else{
-      res.status(403).send('invalid sig')
+      res.status(403).send('invalid signature')
     }
   
   } catch (error) {
     res.status(error).send()
   }
-  // if(hasValidSignature(data, req.headers['x-kc-signature'])) {
-  //   // processWebhook(req.body)
-  //   res.status(200).send('Success');
-  // }
-  // else {
-  //   res.status(403).send('Invalid signature');
-  // }
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
